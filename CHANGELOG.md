@@ -16,33 +16,30 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 
 - N/A
-
-### Removed
-
 - N/A
 
 ---
-
 ## [v0.0.2] - 2025-09-29
 
 ### Added
-
 - Background script (`background.js`) for extension logic and future Slack integration.
 - Manifest updated to include background script.
 
-### Changed
 
-- N/A
 
 ### Fixed
 
-- N/A
 
-### Removed
 
-- N/A
 
----
+
+
+
+
+
+
+
+
 
 ## [v0.0.3] - 2025-09-29
 
@@ -216,17 +213,21 @@ All notable changes to this project will be documented in this file.
 ## [v0.0.11] - 2025-09-29
 
 ### Added
+
 - Export/share results feature: users can export meeting cost data as CSV or PDF from the popup UI.
 - UI buttons for exporting and sharing (Slack integration coming soon).
 - Export includes all meeting details and calculated cost.
 
 ### Changed
+
 - N/A
 
 ### Fixed
+
 - N/A
 
 ### Removed
+
 - N/A
 
 ---
