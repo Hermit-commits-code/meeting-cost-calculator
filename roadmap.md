@@ -75,7 +75,7 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 ## 4. Meeting Cost Calculator Features
 
 - [x] Customization: currency, salary ranges, meeting types
-- [ ] Save frequent teams/templates
+- [x] Save frequent teams/templates
 - [ ] Export/share results (PDF, CSV, Slack)
 - [ ] Visualize cumulative costs over time
 

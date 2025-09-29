@@ -16,6 +16,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
 - Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
 - Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
+- Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
 
 ## Getting Started
 
