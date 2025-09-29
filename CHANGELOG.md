@@ -126,4 +126,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.0.7] - 2025-09-29
+
+### Added
+
+- Tested popup UI in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations).
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
 Release notes will be updated after every version bump, documenting all major, minor, and patch changes.

@@ -13,6 +13,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Accessibility improvements (ARIA labels, input associations, contrast)
 - Responsive design for mobile and small screens
 - Subtle animations and micro-interactions for input focus and cost updates
+- Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
 
 ## Getting Started
 
