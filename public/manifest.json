@@ -11,5 +11,9 @@
     "default_popup": "index.html",
     "default_icon": "icon48.png"
   },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "permissions": []
 }
