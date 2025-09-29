@@ -151,6 +151,31 @@ All notable changes to this project will be documented in this file.
 ### Added
 
 - Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display.
+- Accessibility improvements: ARIA labels, input associations, keyboard navigation, and screen reader support.
+- Responsive design: popup adapts to various screen sizes and high-DPI displays.
+- Animations and micro-interactions: smooth transitions for inputs, cost display, and theme toggle.
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
+## [v0.0.9] - 2025-09-29
+
+### Added
+
+- Customization options: salary range presets, meeting type presets, and currency selection in popup UI.
+- Settings section for customization.
+- User preferences (currency, salary preset, meeting type, theme, attendees, salary, duration) persist in localStorage.
 
 ### Changed
 

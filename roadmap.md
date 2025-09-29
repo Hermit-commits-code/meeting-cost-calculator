@@ -68,15 +68,13 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 - [x] Design minimalist, modern popup UI
 
-* [ ] Ensure accessibility and responsiveness
+* [x] Ensure accessibility and responsiveness
 * [x] Add dark/light mode toggle
-* [ ] Polish with animations and micro-interactions
+* [x] Polish with animations and micro-interactions
 
 ## 4. Meeting Cost Calculator Features
 
-- [ ] Input: number of attendees, average salary, meeting duration
-- [ ] Real-time cost calculation
-- [ ] Customization: currency, salary ranges, meeting types
+- [x] Customization: currency, salary ranges, meeting types
 - [ ] Save frequent teams/templates
 - [ ] Export/share results (PDF, CSV, Slack)
 - [ ] Visualize cumulative costs over time
