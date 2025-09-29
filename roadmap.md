@@ -59,10 +59,9 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 ## 2. Core Extension Setup
 
-- [ ] Connect React popup to extension
-- [ ] Add background script (if needed)
-- [ ] Set up content script (if needed)
-- [ ] Test extension loading in Firefox (about:debugging)
++ [x] Enable messaging between React popup and background script
+- [x] Add background script (if needed)
+- [x] Test extension loading in Firefox (about:debugging)
 
 ## 3. UI/UX Foundation
 
@@ -88,13 +87,6 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 - [ ] Explain data handling in extension UI
 
 ## 6. Slack Integration
-
-- [ ] Register Slack app and obtain credentials
-- [ ] Implement OAuth flow for Slack
-- [ ] Allow sharing meeting cost to Slack channels
-- [ ] Test and document integration
-
-## 7. Advanced Features (Optional)
 
 - [ ] Gamification: badges for cost-saving meetings
 - [ ] Tips for efficient meetings

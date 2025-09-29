@@ -44,4 +44,25 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.0.3] - 2025-09-29
+
+### Added
+
+- Enabled messaging between React popup and background script.
+- Popup button sends message to background script and logs response.
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
 Release notes will be updated after every version bump, documenting all major, minor, and patch changes.
