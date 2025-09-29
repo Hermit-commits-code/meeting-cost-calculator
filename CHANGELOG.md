@@ -65,4 +65,45 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.0.4] - 2025-09-29
+
+### Added
+
+- Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection.
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
+## [v0.0.5] - 2025-09-29
+
+### Added
+
+- Accessibility improvements: ARIA labels, input associations, better contrast.
+- Responsive design for mobile and small screens.
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
 Release notes will be updated after every version bump, documenting all major, minor, and patch changes.

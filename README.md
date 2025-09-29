@@ -10,6 +10,9 @@ This project is a professional Firefox browser extension built with React and Vi
 - Placeholder icons (icon48.png, icon128.png)
 - Vite build configured to output to public directory for extension compatibility
 - Messaging enabled between React popup and background script (testable via popup button)
+- Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection
+- Accessibility improvements (ARIA labels, input associations, contrast)
+- Responsive design for mobile and small screens
 
 ## Getting Started
 

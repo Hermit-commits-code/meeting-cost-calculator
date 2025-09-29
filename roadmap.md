@@ -59,16 +59,18 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 ## 2. Core Extension Setup
 
-+ [x] Enable messaging between React popup and background script
-- [x] Add background script (if needed)
-- [x] Test extension loading in Firefox (about:debugging)
+- [x] Enable messaging between React popup and background script
+
+* [x] Add background script (if needed)
+* [x] Test extension loading in Firefox (about:debugging)
 
 ## 3. UI/UX Foundation
 
-- [ ] Design minimalist, modern popup UI
-- [ ] Ensure accessibility and responsiveness
-- [ ] Add dark/light mode toggle
-- [ ] Polish with animations and micro-interactions
+- [x] Design minimalist, modern popup UI
+
+* [ ] Ensure accessibility and responsiveness
+* [ ] Add dark/light mode toggle
+* [ ] Polish with animations and micro-interactions
 
 ## 4. Meeting Cost Calculator Features
 
