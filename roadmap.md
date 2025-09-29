@@ -10,11 +10,11 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 - **React Popup UI Mini-Roadmap**
 
-  1. Design wireframe/mockup
-  2. Build initial component structure
-  3. Style for accessibility and responsiveness
-  4. Add animations/micro-interactions
-  5. Test in extension context
+  1. Design wireframe/mockup [x]
+  2. Build initial component structure [x]
+  3. Style for accessibility and responsiveness [x]
+  4. Add animations/micro-interactions [x]
+  5. Test in extension context [x]
 
 - **Slack Integration Mini-Roadmap**
 
@@ -69,7 +69,7 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 - [x] Design minimalist, modern popup UI
 
 * [ ] Ensure accessibility and responsiveness
-* [ ] Add dark/light mode toggle
+* [x] Add dark/light mode toggle
 * [ ] Polish with animations and micro-interactions
 
 ## 4. Meeting Cost Calculator Features

@@ -14,6 +14,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Responsive design for mobile and small screens
 - Subtle animations and micro-interactions for input focus and cost updates
 - Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
+- Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
 
 ## Getting Started
 

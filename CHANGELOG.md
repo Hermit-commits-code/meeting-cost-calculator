@@ -146,4 +146,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.0.8] - 2025-09-29
+
+### Added
+
+- Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display.
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
 Release notes will be updated after every version bump, documenting all major, minor, and patch changes.
