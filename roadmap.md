@@ -51,11 +51,11 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 ## 1. Project Initialization
 
-- [ ] Scaffold React app (Vite)
-- [ ] Set up extension folder structure
-- [ ] Add Firefox extension manifest (manifest.json)
-- [ ] Add placeholder icons and assets
-- [ ] Configure build to output extension files
+- [x] Scaffold React app (Vite)
+- [x] Set up extension folder structure
+- [x] Add Firefox extension manifest (manifest.json)
+- [x] Add placeholder icons and assets
+- [x] Configure build to output extension files
 
 ## 2. Core Extension Setup
 

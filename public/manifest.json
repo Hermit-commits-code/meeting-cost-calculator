@@ -1,0 +1,15 @@
+{
+  "manifest_version": 2,
+  "name": "Meeting Cost Calculator",
+  "version": "0.0.0",
+  "description": "Calculate the cost of meetings in real time.",
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_icon": "icon48.png"
+  },
+  "permissions": []
+}

@@ -1,16 +1,24 @@
-# React + Vite
+# Meeting Cost Calculator Firefox Extension
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a professional Firefox browser extension built with React and Vite. It calculates the cost of meetings in real time and is designed for superior UX/UI, privacy, and future Slack integration.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Extension folder structure for Firefox
+- Firefox extension manifest (manifest.json)
+- Placeholder icons (icon48.png, icon128.png)
+- Vite build configured to output to public directory for extension compatibility
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Run `npm install` to install dependencies.
+2. Run `npm run build` to build the extension files into the `public` directory.
+3. Load the extension in Firefox via `about:debugging` > "This Firefox" > "Load Temporary Add-on" and select `manifest.json` from the `public` folder.
 
-## Expanding the ESLint configuration
+## Roadmap
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+See `roadmap.md` for detailed development steps and mini-roadmaps.
+
+## License
+
+MIT
