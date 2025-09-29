@@ -44,6 +44,7 @@ function App() {
           min={1}
           value={attendees}
           onChange={(e) => setAttendees(Number(e.target.value))}
+          className="input-animated"
           style={{
             width: "100%",
             padding: 8,
@@ -61,6 +62,7 @@ function App() {
           min={10000}
           value={salary}
           onChange={(e) => setSalary(Number(e.target.value))}
+          className="input-animated"
           style={{
             width: "100%",
             padding: 8,
@@ -78,6 +80,7 @@ function App() {
           min={1}
           value={duration}
           onChange={(e) => setDuration(Number(e.target.value))}
+          className="input-animated"
           style={{
             width: "100%",
             padding: 8,
@@ -93,6 +96,7 @@ function App() {
           id="currency-select"
           value={currency}
           onChange={(e) => setCurrency(e.target.value)}
+          className="input-animated"
           style={{
             width: "100%",
             padding: 8,
@@ -114,11 +118,13 @@ function App() {
           Estimated Meeting Cost
         </span>
         <div
+          className="cost-animated"
           style={{
             fontWeight: 700,
             fontSize: 32,
             marginTop: 8,
             color: "#2a7d46",
+            transition: "color 0.3s, font-size 0.3s",
           }}
         >
           {currency}

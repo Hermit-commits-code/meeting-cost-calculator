@@ -1,3 +1,14 @@
+.input-animated {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-animated:focus {
+  border-color: #2a7d46;
+  box-shadow: 0 0 0 2px #2a7d4622;
+}
+
+.cost-animated {
+  transition: color 0.3s, font-size 0.3s;
+}
 @media (max-width: 480px) {
   #root {
     padding: 0.5rem;

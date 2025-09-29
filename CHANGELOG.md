@@ -106,4 +106,24 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.0.6] - 2025-09-29
+
+### Added
+
+- Subtle animations and micro-interactions for input focus and cost updates in popup UI.
+
+### Changed
+
+- N/A
+
+### Fixed
+
+- N/A
+
+### Removed
+
+- N/A
+
+---
+
 Release notes will be updated after every version bump, documenting all major, minor, and patch changes.

@@ -2,7 +2,6 @@
 
 This project is a professional Firefox browser extension built with React and Vite. It calculates the cost of meetings in real time and is designed for superior UX/UI, privacy, and future Slack integration.
 
-
 ## Features
 
 - Extension folder structure for Firefox
@@ -13,6 +12,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection
 - Accessibility improvements (ARIA labels, input associations, contrast)
 - Responsive design for mobile and small screens
+- Subtle animations and micro-interactions for input focus and cost updates
 
 ## Getting Started
 
