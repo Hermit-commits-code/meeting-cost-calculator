@@ -213,4 +213,22 @@ All notable changes to this project will be documented in this file.
 
 ---
 
+## [v0.0.11] - 2025-09-29
+
+### Added
+- Export/share results feature: users can export meeting cost data as CSV or PDF from the popup UI.
+- UI buttons for exporting and sharing (Slack integration coming soon).
+- Export includes all meeting details and calculated cost.
+
+### Changed
+- N/A
+
+### Fixed
+- N/A
+
+### Removed
+- N/A
+
+---
+
 Release notes will be updated after every version bump, documenting all major, minor, and patch changes.

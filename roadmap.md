@@ -76,7 +76,7 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 - [x] Customization: currency, salary ranges, meeting types
 - [x] Save frequent teams/templates
-- [ ] Export/share results (PDF, CSV, Slack)
+- [x] Export/share results (PDF, CSV, Slack)
 - [ ] Visualize cumulative costs over time
 
 ## 5. Privacy & Transparency
