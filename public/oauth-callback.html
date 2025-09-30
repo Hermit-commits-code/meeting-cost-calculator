@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Slack OAuth Callback</title>
+  </head>
+  <body>
+    <script>
+      // Parse the code from the URL
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+      if (code) {
+        // You can send this code to your extension's background script or popup for token exchange
+        // For now, just display it for debugging
+        document.body.innerHTML = `<h2>Slack OAuth Code:</h2><pre>${code}</pre>`;
+        // TODO: Implement messaging to extension for token exchange
+      } else {
+        document.body.innerHTML = "<h2>No OAuth code found in URL.</h2>";
+      }
+    </script>
+  </body>
+</html>

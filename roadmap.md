@@ -2,52 +2,45 @@
 
 This roadmap outlines every step required to build, polish, and launch a professional Mozilla Firefox extension using React. Follow each phase in order for best results.
 
----
-
 ## Mini-Roadmaps
 
 Mini-roadmaps provide focused, step-by-step guidance for specific features or phases. Refer to these as you reach each major milestone.
 
-- **React Popup UI Mini-Roadmap**
+1. Design wireframe/mockup [x]
+2. Build initial component structure [x]
+3. Style for accessibility and responsiveness [x]
+4. Add animations/micro-interactions [x]
+5. Test in extension context [x]
 
-  1. Design wireframe/mockup [x]
-  2. Build initial component structure [x]
-  3. Style for accessibility and responsiveness [x]
-  4. Add animations/micro-interactions [x]
-  5. Test in extension context [x]
+6. Register Slack app and obtain credentials
+7. Implement OAuth flow
+8. Add UI for Slack sharing
+9. Test message sending to channels
+10. Document integration steps
 
-- **Slack Integration Mini-Roadmap**
+11. Audit code for data collection
+12. Write privacy policy
+13. Add privacy info to UI
+14. Open-source repo setup
+15. Review for compliance
 
-  1. Register Slack app and obtain credentials
-  2. Implement OAuth flow
-  3. Add UI for Slack sharing
-  4. Test message sending to channels
-  5. Document integration steps
+16. List customization options (currency, salary, templates)
+17. Design settings UI
+18. Implement state management
+19. Persist user preferences
+20. Test edge cases
 
-- **Privacy & Transparency Mini-Roadmap**
+21. Prepare screenshots and demo GIFs
+22. Write launch copy and tagline
+23. Schedule launch date
+24. Engage early supporters
+25. Monitor feedback and respond
 
-  1. Audit code for data collection
-  2. Write privacy policy
-  3. Add privacy info to UI
-  4. Open-source repo setup
-  5. Review for compliance
-
-- **Customization Mini-Roadmap**
-
-  1. List customization options (currency, salary, templates)
-  2. Design settings UI
-  3. Implement state management
-  4. Persist user preferences
-  5. Test edge cases
-
-- **Product Hunt Launch Mini-Roadmap**
-  1. Prepare screenshots and demo GIFs
-  2. Write launch copy and tagline
-  3. Schedule launch date
-  4. Engage early supporters
-  5. Monitor feedback and respond
-
----
+26. Research and select a robust PDF library (e.g., jsPDF, pdf-lib)
+27. Design export template for meeting cost data
+28. Implement PDF export with proper formatting
+29. Test PDF output in extension context
+30. Polish UI/UX and document feature
 
 ## 1. Project Initialization
 
@@ -77,7 +70,8 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 - [x] Customization: currency, salary ranges, meeting types
 - [x] Save frequent teams/templates
 - [x] Export/share results (PDF, CSV, Slack)
-- [ ] Visualize cumulative costs over time
+- [ ] (Future) Meeting history: track multiple meetings, attendees, durations, and costs
+- [ ] (Future) Weekly/monthly report: aggregate meetings, participants, and total costs for export
 
 ## 5. Privacy & Transparency
 
@@ -88,7 +82,23 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 
 ## 6. Slack Integration
 
-- [ ] Gamification: badges for cost-saving meetings
+- [ ] (Future) Fetch participant names from Slack channel/meeting context (with user consent)
+- [ ] (Future) Include participant names in exported PDF/CSV
+- [ ] (Future) Add privacy controls for name sharing
+- [ ] Tips for efficient meetings
+- [ ] Multi-language support
+- [ ] Integration with calendar APIs (future)
+
+## 7. Team Management & Salary Assignment
+
+- [ ] (Future) Admin/boss can assign salaries to team members
+- [ ] (Future) Auto-fill salaries when adding participants to meetings
+- [ ] (Future) Secure, private team management UI for editing salaries
+- [ ] (Future) Integrate with meeting history and reporting
+
+- [ ] (Future) Fetch participant names from Slack channel/meeting context (with user consent)
+- [ ] (Future) Include participant names in exported PDF/CSV
+- [ ] (Future) Add privacy controls for name sharing
 - [ ] Tips for efficient meetings
 - [ ] Multi-language support
 - [ ] Integration with calendar APIs (future)
