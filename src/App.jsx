@@ -30,8 +30,7 @@ function App() {
     if (!slackAccessToken || !slackChannel) return;
     setSlackStatus("Sending...");
     fetch(
-      //"https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/api/slack",
-      "http://localhost:3000/api/slack",
+      "https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/api/slack",
       {
         method: "POST",
         headers: {

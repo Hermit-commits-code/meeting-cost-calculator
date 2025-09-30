@@ -1,6 +1,6 @@
 # Meeting Cost Calculator Firefox Extension
 
-This project is a professional Firefox browser extension built with React and Vite. It calculates the cost of meetings in real time and is designed for superior UX/UI, privacy, and future Slack integration.
+This project is a professional Firefox browser extension built with React and Vite. It calculates the cost of meetings in real time and is designed for superior UX/UI, privacy, and Slack integration via a secure production relay endpoint.
 
 ## Features
 
@@ -19,6 +19,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
 - Export/share results: users can export meeting cost data as CSV or PDF from the popup UI
   Export/share results: users can export meeting cost data as CSV or PDF from the popup UI. (MVP complete; advanced PDF export planned in future mini-roadmap)
+  Share meeting cost directly to Slack channels using a secure production relay endpoint
 
 ## Getting Started
 
