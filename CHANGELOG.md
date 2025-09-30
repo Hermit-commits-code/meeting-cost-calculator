@@ -224,15 +224,8 @@ Release notes will be updated after every version bump, documenting all major, m
 - Slack integration: relay server, CORS support, and message posting from extension UI
 - Manual OAuth flow and token exchange for Slack
 - Roadmap updated with next-phase Slack integration improvements
-
 - UI now supports direct Slack sharing (production relay endpoint planned)
-
 - CORS errors for local relay server
-
-- N/A
-
-### Added
-
 - Enabled messaging between React popup and background script.
 - Popup button sends message to background script and logs response.
 
