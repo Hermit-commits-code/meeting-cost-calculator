@@ -18,6 +18,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
 - Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
 - Export/share results: users can export meeting cost data as CSV or PDF from the popup UI
+  Export/share results: users can export meeting cost data as CSV or PDF from the popup UI. (MVP complete; advanced PDF export planned in future mini-roadmap)
 
 ## Getting Started
 

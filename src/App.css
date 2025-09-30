@@ -1,3 +1,25 @@
+/* Prevent popup from shrinking in extension context */
+#root {
+  min-width: 280px;
+  min-height: 340px;
+}
+.popup-light {
+  background: #fff;
+  color: #222;
+}
+.popup-dark {
+  background: #222;
+  color: #f3f3f3;
+}
+.popup-dark input,
+.popup-dark select {
+  background: #333;
+  color: #f3f3f3;
+  border: 1px solid #444;
+}
+.popup-dark .cost-animated {
+  color: #7fffd4 !important;
+}
 .input-animated {
   transition: border-color 0.2s, box-shadow 0.2s;
 }
