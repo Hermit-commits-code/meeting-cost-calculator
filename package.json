@@ -1,7 +1,7 @@
 {
   "name": "meeting-cost-calculator",
   "private": true,
-  "version": "0.0.16",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,6 +13,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
+  "description": "Production-ready Firefox extension with Slack integration, session token relay, and ngrok/local relay support.",
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@types/react": "^19.1.13",

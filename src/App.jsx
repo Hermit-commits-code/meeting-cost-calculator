@@ -1,100 +1,145 @@
-import React, { useState } from "react"; // Import React to fix useEffect lint error
+import React, { useState } from "react";
 import "./App.css";
+import Toast from "./components/Toast.jsx";
+import SlackStatus from "./components/SlackStatus.jsx";
+import {
+  SLACK_CLIENT_ID,
+  SLACK_REDIRECT_URI,
+  requestSlackOAuthCode,
+  exchangeSlackToken,
+  postToSlack as slackPostToSlack,
+} from "./slackService.js";
+import { savePref, getPref } from "./utils/storage.js";
 
 // ...define your state, handlers, and logic here...
 
 function App() {
-  // Detect OAuth code in URL and exchange for token
-  React.useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
-    if (code) {
-      setSlackStatus("Authorizing with Slack...");
-      fetch(
-        "https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/api/exchange-token",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json; charset=utf-8" },
-          body: JSON.stringify({ code }),
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.access_token) {
-            setSlackAccessToken(data.access_token);
-            savePref("slackAccessToken", data.access_token);
-            setSlackStatus("Slack connected!");
-            // Remove code from URL for cleanliness
-            window.history.replaceState(
-              {},
-              document.title,
-              window.location.pathname
-            );
-          } else {
-            setSlackStatus(
-              "Error: " + (data.error || "Could not retrieve token")
-            );
-          }
-        })
-        .catch(() => setSlackStatus("Error: Network or permission issue"));
-    }
-  }, []);
-  // Slack OAuth constants
-  const SLACK_CLIENT_ID = "9599374319411.9591125131255";
-  const SLACK_REDIRECT_URI =
-    "https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/oauth/callback";
-
-  function connectToSlack() {
-    const authUrl = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=chat:write,channels:read,groups:read,im:read,mpim:read&redirect_uri=${encodeURIComponent(
-      SLACK_REDIRECT_URI
-    )}`;
-    window.open(authUrl, "_blank");
-  }
+  // State declarations (move to top)
   const [theme, setTheme] = useState("light");
-
-  function handleTheme(nextTheme) {
-    setTheme(nextTheme);
-    savePref("theme", nextTheme);
-  }
   const [attendees, setAttendees] = useState(1);
   const [salary, setSalary] = useState(50000);
   const [duration, setDuration] = useState(60);
   const [currency, setCurrency] = useState("$");
   const [meetingType, setMeetingType] = useState("");
   const [salaryPreset, setSalaryPreset] = useState("");
-  const [slackAccessToken, setSlackAccessToken] = useState("");
+  const [slackAccessToken, setSlackAccessToken] = useState(""); // Now stores session token
   const [slackChannel, setSlackChannel] = useState("");
   const [slackStatus, setSlackStatus] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
 
-  function savePref(key, value) {
-    try {
-      localStorage.setItem(key, value);
-    } catch (e) {}
+  // savePref and getPref now imported from utils/storage.js
+
+  // Theme handler
+  function handleTheme(nextTheme) {
+    setTheme(nextTheme);
+    savePref("theme", nextTheme);
   }
+
+  // Slack connect handler
+  function connectToSlack() {
+    window.open(
+      `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=chat:write,channels:read,groups:read,im:read,mpim:read,users:read&redirect_uri=${encodeURIComponent(
+        SLACK_REDIRECT_URI
+      )}`,
+      "_blank"
+    );
+  }
+
+  // Detect OAuth code in URL and exchange for token
+  React.useEffect(() => {
+    // Helper: reload popup if redirected from OAuth callback
+    if (window.location.search.includes("code=")) {
+      console.log(
+        "[MeetingCalc] Detected OAuth code in URL, reloading popup for fresh state."
+      );
+      window.location.href = window.location.origin + window.location.pathname;
+      return;
+    }
+
+    // Request OAuth code from background script
+    requestSlackOAuthCode().then((response) => {
+      console.log("[MeetingCalc] Background script response:", response);
+      const code = response && response.code;
+      if (code) {
+        setSlackStatus("Authorizing with Slack...");
+        setToastMsg("🔄 Authorizing with Slack...");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2500);
+        exchangeSlackToken(code)
+          .then((data) => {
+            console.log("[MeetingCalc] Exchange token response:", data);
+            if (data.session_token) {
+              setSlackAccessToken(data.session_token);
+              savePref("slackSessionToken", data.session_token);
+              setSlackStatus("Slack connected!");
+              setToastMsg("✅ Slack connected!");
+              setShowToast(true);
+              setTimeout(() => setShowToast(false), 3000);
+              console.log(
+                "[MeetingCalc] Slack connected! Session token:",
+                data.session_token
+              );
+            } else {
+              setSlackStatus(
+                "Error: " + (data.error || "Could not retrieve session token")
+              );
+              setToastMsg(
+                "❌ " + (data.error || "Could not retrieve session token")
+              );
+              setShowToast(true);
+              setTimeout(() => setShowToast(false), 3500);
+              console.error(
+                "[MeetingCalc] Slack connection error:",
+                data.error || "Could not retrieve session token"
+              );
+            }
+          })
+          .catch(() => {
+            setSlackStatus("Error: Network or permission issue");
+            setToastMsg("❌ Network or permission issue");
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 3500);
+            console.error("[MeetingCalc] Network or permission issue.");
+          });
+      }
+    });
+
+    // On popup open, show persistent Slack connection status
+    const sessionToken = getPref("slackSessionToken");
+    if (sessionToken) {
+      setSlackStatus("Slack connected!");
+      if (!slackAccessToken) {
+        setToastMsg("✅ Slack connected!");
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+        console.log(
+          "[MeetingCalc] Slack connected! Session token:",
+          sessionToken
+        );
+      }
+      setSlackAccessToken(sessionToken);
+    }
+  }, [slackAccessToken]);
 
   function postToSlack() {
     if (!slackAccessToken || !slackChannel) return;
     setSlackStatus("Sending...");
-    fetch(
-      "https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/api/slack",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json; charset=utf-8",
-        },
-        body: JSON.stringify({
-          accessToken: slackAccessToken,
-          channel: slackChannel,
-          text: `Meeting Cost: ${currency}${totalCost.toFixed(
-            2
-          )}\nAttendees: ${attendees}\nAvg. Salary: ${currency}${salary}\nDuration: ${duration} min`,
-        }),
-      }
+    setToastMsg("Sending to Slack...");
+    setShowToast(true);
+    slackPostToSlack(
+      slackAccessToken,
+      slackChannel,
+      `Meeting Cost: ${currency}${totalCost.toFixed(
+        2
+      )}\nAttendees: ${attendees}\nAvg. Salary: ${currency}${salary}\nDuration: ${duration} min`
     )
-      .then((res) => res.json())
       .then((data) => {
         if (data.ok) {
           setSlackStatus("Shared to Slack!");
+          setToastMsg("✅ Shared to Slack!");
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 2500);
         } else {
           let errorMsg = "";
           switch (data.error) {
@@ -104,7 +149,7 @@ function App() {
               break;
             case "token_revoked":
               errorMsg =
-                "Your Slack token was revoked. Please re-authorize the extension.";
+                "Your Slack session was revoked. Please re-authorize the extension.";
               break;
             case "channel_not_found":
               errorMsg =
@@ -116,7 +161,7 @@ function App() {
               break;
             case "missing_required_fields":
               errorMsg =
-                "Missing required fields. Please check your Slack token and channel.";
+                "Missing required fields. Please check your Slack session and channel.";
               break;
             default:
               errorMsg = data.error
@@ -124,12 +169,20 @@ function App() {
                 : "Unknown error occurred.";
           }
           setSlackStatus(`Error: ${errorMsg}`);
+          setToastMsg(`❌ ${errorMsg}`);
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 3500);
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setSlackStatus(
           "Error: Network or permission issue. Please check your connection and try again."
         );
+        setToastMsg(
+          "❌ Network or permission issue. Please check your connection and try again."
+        );
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3500);
       });
   }
 
@@ -148,10 +201,12 @@ function App() {
         fontFamily: "Inter, Arial, sans-serif",
         borderRadius: 12,
         boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+        position: "relative",
       }}
       role="main"
       aria-label="Meeting Cost Calculator"
     >
+      <Toast show={showToast} msg={toastMsg} />
       <div
         style={{
           display: "flex",
@@ -160,12 +215,15 @@ function App() {
           marginBottom: 8,
         }}
       >
-        <h2
-          style={{ fontWeight: 600, fontSize: 22, marginBottom: 8 }}
-          id="meeting-cost-title"
-        >
-          Meeting Cost Calculator
-        </h2>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h2
+            style={{ fontWeight: 600, fontSize: 22, marginBottom: 8 }}
+            id="meeting-cost-title"
+          >
+            Meeting Cost Calculator
+          </h2>
+          <SlackStatus status={slackStatus} />
+        </div>
         <button
           type="button"
           aria-label={
@@ -459,83 +517,145 @@ function App() {
               Export as PDF
             </button>
           </div>
-          {/* Slack Integration Section */}
+          {/* Professional Slack Integration Section */}
           <div
             style={{
-              marginTop: 16,
-              padding: 12,
-              background: "#f6f6f6",
-              borderRadius: 8,
+              marginTop: 32,
+              padding: 18,
+              background: "#f8f7fa",
+              borderRadius: 12,
+              boxShadow: "0 1px 6px rgba(74,21,75,0.08)",
+              border: "1px solid #e5e1ea",
+              maxWidth: 340,
+              marginLeft: "auto",
+              marginRight: "auto",
             }}
           >
-            <button
-              type="button"
-              onClick={connectToSlack}
+            <h3
               style={{
-                padding: "8px 12px",
-                borderRadius: 6,
-                border: "none",
-                background: "#4a154b",
-                color: "#fff",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 16,
-                marginBottom: 8,
+                fontWeight: 600,
+                fontSize: 18,
+                color: "#4a154b",
+                marginBottom: 10,
+                letterSpacing: "-0.5px",
               }}
-              aria-label="Connect to Slack"
             >
-              Connect to Slack
-            </button>
-            <label htmlFor="slack-channel-input">
-              Slack Channel (e.g. #general)
-            </label>
-            <input
-              id="slack-channel-input"
-              type="text"
-              value={slackChannel}
-              onChange={(e) => setSlackChannel(e.target.value)}
-              placeholder="#general"
+              Slack Integration
+            </h3>
+            <hr
               style={{
-                width: "100%",
-                padding: 8,
-                borderRadius: 6,
-                border: "1px solid #bbb",
-                fontSize: 16,
-                marginBottom: 8,
+                border: "none",
+                borderTop: "1px solid #e5e1ea",
+                margin: "8px 0 16px 0",
               }}
-              aria-label="Slack channel input"
             />
-            <button
-              type="button"
-              onClick={postToSlack}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 6,
-                border: "none",
-                background:
-                  slackAccessToken && slackChannel ? "#4a154b" : "#bbb",
-                color: "#fff",
-                fontWeight: 500,
-                cursor:
-                  slackAccessToken && slackChannel ? "pointer" : "not-allowed",
-                fontSize: 16,
-                opacity: slackAccessToken && slackChannel ? 1 : 0.7,
-                marginTop: 8,
-              }}
-              aria-label="Share to Slack"
-              disabled={!slackAccessToken || !slackChannel}
-            >
-              Share to Slack
-            </button>
-            {slackStatus && (
-              <div
+            {!slackAccessToken ? (
+              <button
+                type="button"
+                onClick={connectToSlack}
                 style={{
-                  marginTop: 8,
-                  color: slackStatus.includes("Error") ? "#d6336c" : "#2a7d46",
+                  padding: "8px 16px",
+                  borderRadius: 8,
+                  border: "none",
+                  background: "#4a154b",
+                  color: "#fff",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontSize: 16,
+                  marginBottom: 12,
+                  boxShadow: "0 1px 4px rgba(74,21,75,0.08)",
+                  transition: "background 0.2s",
                 }}
+                aria-label="Connect to Slack"
               >
-                {slackStatus}
-              </div>
+                Connect to Slack
+              </button>
+            ) : (
+              <>
+                <div
+                  style={{
+                    fontWeight: 500,
+                    color: "#2a7d46",
+                    marginBottom: 8,
+                    fontSize: 15,
+                    textAlign: "center",
+                  }}
+                >
+                  ✔️ Slack Connected
+                </div>
+                <label
+                  htmlFor="slack-channel-input"
+                  style={{ fontWeight: 500, fontSize: 15, color: "#4a154b" }}
+                >
+                  Slack Channel
+                </label>
+                <input
+                  id="slack-channel-input"
+                  type="text"
+                  value={slackChannel}
+                  onChange={(e) => setSlackChannel(e.target.value)}
+                  placeholder="#general"
+                  style={{
+                    width: "100%",
+                    padding: 10,
+                    borderRadius: 8,
+                    border: "1px solid #bbb",
+                    fontSize: 16,
+                    marginBottom: 12,
+                    marginTop: 4,
+                  }}
+                  aria-label="Slack channel input"
+                />
+                <button
+                  type="button"
+                  onClick={postToSlack}
+                  style={{
+                    padding: "8px 16px",
+                    borderRadius: 8,
+                    border: "none",
+                    background:
+                      slackAccessToken && slackChannel ? "#4a154b" : "#bbb",
+                    color: "#fff",
+                    fontWeight: 600,
+                    cursor:
+                      slackAccessToken && slackChannel
+                        ? "pointer"
+                        : "not-allowed",
+                    fontSize: 16,
+                    opacity: slackAccessToken && slackChannel ? 1 : 0.7,
+                    marginTop: 4,
+                    boxShadow: "0 1px 4px rgba(74,21,75,0.08)",
+                    transition: "background 0.2s",
+                  }}
+                  aria-label="Share to Slack"
+                  disabled={!slackAccessToken || !slackChannel}
+                >
+                  Share to Slack
+                </button>
+                {slackStatus && (
+                  <div
+                    style={{
+                      marginTop: 12,
+                      color: slackStatus.includes("Error")
+                        ? "#d6336c"
+                        : "#2a7d46",
+                      fontWeight: 500,
+                      fontSize: 15,
+                      textAlign: "center",
+                      background: slackStatus.includes("Error")
+                        ? "#ffe6ea"
+                        : "#e6fff2",
+                      borderRadius: 6,
+                      padding: "8px 12px",
+                      boxShadow: "0 1px 4px rgba(74,21,75,0.06)",
+                      marginBottom: 4,
+                    }}
+                    role="status"
+                  >
+                    {slackStatus}
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>

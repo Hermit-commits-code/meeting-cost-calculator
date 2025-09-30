@@ -1,19 +1,32 @@
-// Placeholder background script for future Slack integration and extension logic
-console.log("Meeting Cost Calculator background script loaded");
+// background.js: Capture OAuth code from redirect and store for popup (cross-browser)
+let slackOAuthCode = null;
 
-// Listen for messages from the popup
+function handleTabUpdate(tabId, changeInfo, tab) {
+  if (changeInfo.url && changeInfo.url.includes("/oauth/callback?code=")) {
+    const url = new URL(changeInfo.url);
+    const code = url.searchParams.get("code");
+    if (code) {
+      slackOAuthCode = code;
+    }
+  }
+}
+
 if (typeof browser !== "undefined") {
-  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === "GREET") {
-      console.log("Received from popup:", message.payload);
-      sendResponse({ reply: "Hello from background script!" });
+  browser.tabs.onUpdated.addListener(handleTabUpdate);
+  browser.runtime.onMessage.addListener((msg, sender) => {
+    if (msg.type === "GET_SLACK_OAUTH_CODE") {
+      const code = slackOAuthCode;
+      slackOAuthCode = null; // Clear after sending
+      return Promise.resolve({ code });
     }
   });
 } else if (typeof chrome !== "undefined") {
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === "GREET") {
-      console.log("Received from popup:", message.payload);
-      sendResponse({ reply: "Hello from background script!" });
+  chrome.tabs.onUpdated.addListener(handleTabUpdate);
+  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.type === "GET_SLACK_OAUTH_CODE") {
+      const code = slackOAuthCode;
+      slackOAuthCode = null;
+      sendResponse({ code });
     }
     return true;
   });
