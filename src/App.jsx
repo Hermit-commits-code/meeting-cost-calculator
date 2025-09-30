@@ -1,9 +1,55 @@
-import { useState } from "react";
+import React, { useState } from "react"; // Import React to fix useEffect lint error
 import "./App.css";
 
 // ...define your state, handlers, and logic here...
 
 function App() {
+  // Detect OAuth code in URL and exchange for token
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get("code");
+    if (code) {
+      setSlackStatus("Authorizing with Slack...");
+      fetch(
+        "https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/api/exchange-token",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json; charset=utf-8" },
+          body: JSON.stringify({ code }),
+        }
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.access_token) {
+            setSlackAccessToken(data.access_token);
+            savePref("slackAccessToken", data.access_token);
+            setSlackStatus("Slack connected!");
+            // Remove code from URL for cleanliness
+            window.history.replaceState(
+              {},
+              document.title,
+              window.location.pathname
+            );
+          } else {
+            setSlackStatus(
+              "Error: " + (data.error || "Could not retrieve token")
+            );
+          }
+        })
+        .catch(() => setSlackStatus("Error: Network or permission issue"));
+    }
+  }, []);
+  // Slack OAuth constants
+  const SLACK_CLIENT_ID = "9599374319411.9591125131255";
+  const SLACK_REDIRECT_URI =
+    "https://slack-oauth-relay-8bm11eodj-joseph-chus-projects.vercel.app/oauth/callback";
+
+  function connectToSlack() {
+    const authUrl = `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=chat:write,channels:read,groups:read,im:read,mpim:read&redirect_uri=${encodeURIComponent(
+      SLACK_REDIRECT_URI
+    )}`;
+    window.open(authUrl, "_blank");
+  }
   const [theme, setTheme] = useState("light");
 
   function handleTheme(nextTheme) {
@@ -391,26 +437,24 @@ function App() {
               borderRadius: 8,
             }}
           >
-            <label htmlFor="slack-token-input">Slack Access Token</label>
-            <input
-              id="slack-token-input"
-              type="text"
-              value={slackAccessToken}
-              onChange={(e) => {
-                setSlackAccessToken(e.target.value);
-                savePref("slackAccessToken", e.target.value);
-              }}
-              placeholder="Paste your Slack access token here"
+            <button
+              type="button"
+              onClick={connectToSlack}
               style={{
-                width: "100%",
-                padding: 8,
+                padding: "8px 12px",
                 borderRadius: 6,
-                border: "1px solid #bbb",
+                border: "none",
+                background: "#4a154b",
+                color: "#fff",
+                fontWeight: 500,
+                cursor: "pointer",
                 fontSize: 16,
                 marginBottom: 8,
               }}
-              aria-label="Slack access token input"
-            />
+              aria-label="Connect to Slack"
+            >
+              Connect to Slack
+            </button>
             <label htmlFor="slack-channel-input">
               Slack Channel (e.g. #general)
             </label>

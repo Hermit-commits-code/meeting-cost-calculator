@@ -20,6 +20,7 @@ This project is a professional Firefox browser extension built with React and Vi
 - Export/share results: users can export meeting cost data as CSV or PDF from the popup UI
   Export/share results: users can export meeting cost data as CSV or PDF from the popup UI. (MVP complete; advanced PDF export planned in future mini-roadmap)
   Share meeting cost directly to Slack channels using a secure production relay endpoint
+  Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
 
 ## Getting Started
 
