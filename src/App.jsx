@@ -17,18 +17,123 @@ import { savePref, getPref } from "./utils/storage.js";
 
 function App() {
   // State declarations (move to top)
-  const [theme, setTheme] = useState("light");
-  const [attendees, setAttendees] = useState(1);
-  const [salary, setSalary] = useState(50000);
-  const [duration, setDuration] = useState(60);
-  const [currency, setCurrency] = useState("$");
-  const [meetingType, setMeetingType] = useState("");
-  const [salaryPreset, setSalaryPreset] = useState("");
+  const [theme, setTheme] = useState(() => getPref("theme") || "light");
+  const [attendees, setAttendees] = useState(
+    () => Number(getPref("attendees")) || 1
+  );
+  const [salary, setSalary] = useState(
+    () => Number(getPref("salary")) || 50000
+  );
+  const [duration, setDuration] = useState(
+    () => Number(getPref("duration")) || 60
+  );
+  const [currency, setCurrency] = useState(() => getPref("currency") || "$");
+  const [meetingType, setMeetingType] = useState(
+    () => getPref("meetingType") || ""
+  );
+  const [salaryPreset, setSalaryPreset] = useState(
+    () => getPref("salaryPreset") || ""
+  );
+  // Persist user preferences on change
+  React.useEffect(() => {
+    savePref("theme", theme);
+  }, [theme]);
+  React.useEffect(() => {
+    savePref("attendees", attendees);
+  }, [attendees]);
+  React.useEffect(() => {
+    savePref("salary", salary);
+  }, [salary]);
+  React.useEffect(() => {
+    savePref("duration", duration);
+  }, [duration]);
+  React.useEffect(() => {
+    savePref("currency", currency);
+  }, [currency]);
+  React.useEffect(() => {
+    savePref("meetingType", meetingType);
+  }, [meetingType]);
+  React.useEffect(() => {
+    savePref("salaryPreset", salaryPreset);
+  }, [salaryPreset]);
   const [slackAccessToken, setSlackAccessToken] = useState(""); // Now stores session token
   const [slackChannel, setSlackChannel] = useState("");
   const [slackStatus, setSlackStatus] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
+  // Team templates state
+  const [templates, setTemplates] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("meetingTemplates")) || [];
+    } catch {
+      return [];
+    }
+  });
+  const [templateName, setTemplateName] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState("");
+  // Save templates to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem("meetingTemplates", JSON.stringify(templates));
+  }, [templates]);
+
+  // Save current settings as a template
+  function handleSaveTemplate() {
+    if (!templateName.trim()) {
+      setToastMsg("❌ Please enter a template name.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
+      return;
+    }
+    const newTemplate = {
+      name: templateName.trim(),
+      settings: {
+        attendees,
+        salary,
+        duration,
+        currency,
+        meetingType,
+        salaryPreset,
+      },
+    };
+    // Prevent duplicate names
+    if (templates.some((t) => t.name === newTemplate.name)) {
+      setToastMsg("❌ Template name already exists.");
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
+      return;
+    }
+    setTemplates([...templates, newTemplate]);
+    setTemplateName("");
+    setToastMsg("✅ Template saved!");
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  }
+
+  // Load selected template
+  function handleLoadTemplate(name) {
+    const template = templates.find((t) => t.name === name);
+    if (template) {
+      setAttendees(template.settings.attendees);
+      setSalary(template.settings.salary);
+      setDuration(template.settings.duration);
+      setCurrency(template.settings.currency);
+      setMeetingType(template.settings.meetingType);
+      setSalaryPreset(template.settings.salaryPreset);
+      setSelectedTemplate(name);
+      setToastMsg(`✅ Loaded template: ${name}`);
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
+    }
+  }
+
+  // Delete template
+  function handleDeleteTemplate(name) {
+    setTemplates(templates.filter((t) => t.name !== name));
+    setToastMsg(`🗑️ Deleted template: ${name}`);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+    if (selectedTemplate === name) setSelectedTemplate("");
+  }
 
   // savePref and getPref now imported from utils/storage.js
 
@@ -295,6 +400,90 @@ function App() {
             <option value="Review">Review (30 min)</option>
             <option value="Workshop">Workshop (120 min)</option>
           </select>
+
+          {/* Meeting Presets Quick-Select */}
+          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+            <button
+              type="button"
+              onClick={() => {
+                setMeetingType("Standup");
+                setDuration(15);
+              }}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "none",
+                background: "#e5e1ea",
+                color: "#4a154b",
+                fontWeight: 500,
+                cursor: "pointer",
+                fontSize: 15,
+              }}
+              aria-label="Preset Standup"
+            >
+              Standup (15m)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMeetingType("Planning");
+                setDuration(60);
+              }}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "none",
+                background: "#e5e1ea",
+                color: "#4a154b",
+                fontWeight: 500,
+                cursor: "pointer",
+                fontSize: 15,
+              }}
+              aria-label="Preset Planning"
+            >
+              Planning (60m)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMeetingType("Review");
+                setDuration(30);
+              }}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "none",
+                background: "#e5e1ea",
+                color: "#4a154b",
+                fontWeight: 500,
+                cursor: "pointer",
+                fontSize: 15,
+              }}
+              aria-label="Preset Review"
+            >
+              Review (30m)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMeetingType("Workshop");
+                setDuration(120);
+              }}
+              style={{
+                padding: "6px 10px",
+                borderRadius: 6,
+                border: "none",
+                background: "#e5e1ea",
+                color: "#4a154b",
+                fontWeight: 500,
+                cursor: "pointer",
+                fontSize: 15,
+              }}
+              aria-label="Preset Workshop"
+            >
+              Workshop (120m)
+            </button>
+          </div>
         </div>
       </details>
       {/* Teams/Templates Section */}
@@ -314,8 +503,8 @@ function App() {
           <input
             id="template-name-input"
             type="text"
-            value={""}
-            onChange={() => {}}
+            value={templateName}
+            onChange={(e) => setTemplateName(e.target.value)}
             placeholder="e.g. Design Team, Sprint Planning"
             style={{
               padding: 8,
@@ -327,7 +516,7 @@ function App() {
           />
           <button
             type="button"
-            onClick={() => {}}
+            onClick={handleSaveTemplate}
             style={{
               padding: "8px 12px",
               borderRadius: 6,
@@ -342,6 +531,59 @@ function App() {
           >
             Save Template
           </button>
+          {templates.length > 0 && (
+            <>
+              <label htmlFor="template-select">Load Template</label>
+              <select
+                id="template-select"
+                value={selectedTemplate}
+                onChange={(e) => handleLoadTemplate(e.target.value)}
+                style={{
+                  padding: 8,
+                  borderRadius: 6,
+                  border: "1px solid #bbb",
+                  fontSize: 16,
+                }}
+                aria-label="Template selection"
+              >
+                <option value="">Select a template...</option>
+                {templates.map((t) => (
+                  <option key={t.name} value={t.name}>
+                    {t.name}
+                  </option>
+                ))}
+              </select>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 4,
+                  marginTop: 8,
+                }}
+              >
+                {templates.map((t) => (
+                  <button
+                    key={t.name}
+                    type="button"
+                    onClick={() => handleDeleteTemplate(t.name)}
+                    style={{
+                      padding: "4px 8px",
+                      borderRadius: 4,
+                      border: "none",
+                      background: "#d6336c",
+                      color: "#fff",
+                      fontWeight: 500,
+                      cursor: "pointer",
+                      fontSize: 14,
+                    }}
+                    aria-label={`Delete template ${t.name}`}
+                  >
+                    Delete {t.name}
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </details>
       {/* Main Form Section */}

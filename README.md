@@ -16,7 +16,9 @@ Subtle animations and micro-interactions for input focus and cost updates
 Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
 Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
 Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
-Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
+Team templates: save/load meeting settings as named templates
+Meeting presets: quick-select for common meeting types/durations
+Persistent preferences: all settings saved to localStorage
 Export/share results: users can export meeting cost data as CSV (with header row, detailed data, and timestamp) or PDF from the popup UI. PDF export uses jsPDF for professional formatting and branding.
 Share meeting cost directly to Slack channels using a secure relay endpoint (supports Vercel, Railway, or local ngrok relay)
 Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
