@@ -37,10 +37,28 @@ Mini-roadmaps provide focused, step-by-step guidance for specific features or ph
 25. Monitor feedback and respond
 
 26. Research and select a robust PDF library (e.g., jsPDF, pdf-lib)
-27. Design export template for meeting cost data
-28. Implement PDF export with proper formatting
-29. Test PDF output in extension context
-30. Polish UI/UX and document feature
+
+# Next-Phase Slack Integration Roadmap
+
+After initial Slack integration is working, implement the following improvements:
+
+1. Switch to production relay endpoint
+   - Update extension fetch URL to use Vercel relay endpoint for Slack API calls.
+2. Automate OAuth flow for users
+   - Implement UI and backend logic for users to authenticate with Slack and obtain tokens automatically.
+3. Enhance error handling and feedback
+   - Improve extension and relay error messages, add user-friendly notifications for Slack sharing.
+4. Secure token management
+   - Ensure tokens are never exposed in client-side code; store and manage tokens securely via relay.
+5. Improve Slack sharing UI
+   - Add channel picker, better status messages, and polish the Slack integration section of the extension.
+6. Document integration and setup
+   - Write clear documentation for Slack integration setup, usage, and troubleshooting.
+7. Test with multiple scenarios
+   - Test Slack integration with different channels, users, and message formats to ensure reliability.
+8. Implement PDF export with proper formatting
+9. Test PDF output in extension context
+10. Polish UI/UX and document feature
 
 ## 1. Project Initialization
 
