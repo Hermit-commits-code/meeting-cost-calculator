@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import ExportShareSection from "./components/ExportShareSection.jsx";
+import SlackIntegrationSection from "./components/SlackIntegrationSection.jsx";
 import "./App.css";
 import Toast from "./components/Toast.jsx";
 import SlackStatus from "./components/SlackStatus.jsx";
@@ -30,13 +32,11 @@ function App() {
 
   // savePref and getPref now imported from utils/storage.js
 
-  // Theme handler
   function handleTheme(nextTheme) {
     setTheme(nextTheme);
     savePref("theme", nextTheme);
   }
 
-  // Slack connect handler
   function connectToSlack() {
     window.open(
       `https://slack.com/oauth/v2/authorize?client_id=${SLACK_CLIENT_ID}&scope=chat:write,channels:read,groups:read,im:read,mpim:read,users:read&redirect_uri=${encodeURIComponent(
@@ -444,229 +444,24 @@ function App() {
         </div>
         <div>
           {/* Export/Share Section */}
-          <div
-            style={{
-              marginTop: 24,
-              display: "flex",
-              flexDirection: "column",
-              gap: 10,
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                const data = [
-                  ["Attendees", attendees],
-                  ["Avg. Salary", `${currency}${salary}`],
-                  ["Duration (min)", duration],
-                  ["Meeting Type", meetingType || "Custom"],
-                  ["Salary Preset", salaryPreset || "Custom"],
-                  ["Estimated Cost", `${currency}${totalCost.toFixed(2)}`],
-                ];
-                const csv = data.map((row) => row.join(",")).join("\n");
-                const blob = new Blob([csv], { type: "text/csv" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "meeting-cost.csv";
-                a.click();
-                URL.revokeObjectURL(url);
-              }}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 6,
-                border: "none",
-                background: "#0072c6",
-                color: "#fff",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 16,
-              }}
-              aria-label="Export as CSV"
-            >
-              Export as CSV
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                import("jspdf").then(({ jsPDF }) => {
-                  const doc = new jsPDF();
-                  doc.setFontSize(18);
-                  doc.text("Meeting Cost Report", 20, 20);
-                  doc.setFontSize(12);
-                  doc.text(`Attendees: ${attendees}`, 20, 35);
-                  doc.text(`Avg. Salary: ${currency}${salary}`, 20, 45);
-                  doc.text(`Duration: ${duration} min`, 20, 55);
-                  doc.text(`Meeting Type: ${meetingType || "Custom"}`, 20, 65);
-                  doc.text(
-                    `Salary Preset: ${salaryPreset || "Custom"}`,
-                    20,
-                    75
-                  );
-                  doc.text(
-                    `Estimated Cost: ${currency}${totalCost.toFixed(2)}`,
-                    20,
-                    85
-                  );
-                  doc.save("meeting-cost.pdf");
-                });
-              }}
-              style={{
-                padding: "8px 12px",
-                borderRadius: 6,
-                border: "none",
-                background: "#d6336c",
-                color: "#fff",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 16,
-              }}
-              aria-label="Export as PDF"
-            >
-              Export as PDF
-            </button>
-          </div>
-          {/* Professional Slack Integration Section */}
-          <div
-            style={{
-              marginTop: 32,
-              padding: 18,
-              background: "#f8f7fa",
-              borderRadius: 12,
-              boxShadow: "0 1px 6px rgba(74,21,75,0.08)",
-              border: "1px solid #e5e1ea",
-              maxWidth: 340,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            <h3
-              style={{
-                fontWeight: 600,
-                fontSize: 18,
-                color: "#4a154b",
-                marginBottom: 10,
-                letterSpacing: "-0.5px",
-              }}
-            >
-              Slack Integration
-            </h3>
-            <hr
-              style={{
-                border: "none",
-                borderTop: "1px solid #e5e1ea",
-                margin: "8px 0 16px 0",
-              }}
-            />
-            {!slackAccessToken ? (
-              <button
-                type="button"
-                onClick={connectToSlack}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: 8,
-                  border: "none",
-                  background: "#4a154b",
-                  color: "#fff",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  fontSize: 16,
-                  marginBottom: 12,
-                  boxShadow: "0 1px 4px rgba(74,21,75,0.08)",
-                  transition: "background 0.2s",
-                }}
-                aria-label="Connect to Slack"
-              >
-                Connect to Slack
-              </button>
-            ) : (
-              <>
-                <div
-                  style={{
-                    fontWeight: 500,
-                    color: "#2a7d46",
-                    marginBottom: 8,
-                    fontSize: 15,
-                    textAlign: "center",
-                  }}
-                >
-                  ✔️ Slack Connected
-                </div>
-                <label
-                  htmlFor="slack-channel-input"
-                  style={{ fontWeight: 500, fontSize: 15, color: "#4a154b" }}
-                >
-                  Slack Channel
-                </label>
-                <input
-                  id="slack-channel-input"
-                  type="text"
-                  value={slackChannel}
-                  onChange={(e) => setSlackChannel(e.target.value)}
-                  placeholder="#general"
-                  style={{
-                    width: "100%",
-                    padding: 10,
-                    borderRadius: 8,
-                    border: "1px solid #bbb",
-                    fontSize: 16,
-                    marginBottom: 12,
-                    marginTop: 4,
-                  }}
-                  aria-label="Slack channel input"
-                />
-                <button
-                  type="button"
-                  onClick={postToSlack}
-                  style={{
-                    padding: "8px 16px",
-                    borderRadius: 8,
-                    border: "none",
-                    background:
-                      slackAccessToken && slackChannel ? "#4a154b" : "#bbb",
-                    color: "#fff",
-                    fontWeight: 600,
-                    cursor:
-                      slackAccessToken && slackChannel
-                        ? "pointer"
-                        : "not-allowed",
-                    fontSize: 16,
-                    opacity: slackAccessToken && slackChannel ? 1 : 0.7,
-                    marginTop: 4,
-                    boxShadow: "0 1px 4px rgba(74,21,75,0.08)",
-                    transition: "background 0.2s",
-                  }}
-                  aria-label="Share to Slack"
-                  disabled={!slackAccessToken || !slackChannel}
-                >
-                  Share to Slack
-                </button>
-                {slackStatus && (
-                  <div
-                    style={{
-                      marginTop: 12,
-                      color: slackStatus.includes("Error")
-                        ? "#d6336c"
-                        : "#2a7d46",
-                      fontWeight: 500,
-                      fontSize: 15,
-                      textAlign: "center",
-                      background: slackStatus.includes("Error")
-                        ? "#ffe6ea"
-                        : "#e6fff2",
-                      borderRadius: 6,
-                      padding: "8px 12px",
-                      boxShadow: "0 1px 4px rgba(74,21,75,0.06)",
-                      marginBottom: 4,
-                    }}
-                    role="status"
-                  >
-                    {slackStatus}
-                  </div>
-                )}
-              </>
-            )}
-          </div>
+          <ExportShareSection
+            attendees={attendees}
+            salary={salary}
+            duration={duration}
+            currency={currency}
+            meetingType={meetingType}
+            salaryPreset={salaryPreset}
+            totalCost={totalCost}
+          />
+          {/* Professional Slack Integration Section (modularized) */}
+          <SlackIntegrationSection
+            slackAccessToken={slackAccessToken}
+            slackChannel={slackChannel}
+            slackStatus={slackStatus}
+            connectToSlack={connectToSlack}
+            setSlackChannel={setSlackChannel}
+            postToSlack={postToSlack}
+          />
         </div>
       </div>
     </div>

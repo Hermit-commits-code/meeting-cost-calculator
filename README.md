@@ -4,25 +4,25 @@ This project is a professional Firefox browser extension built with React and Vi
 
 ## Features
 
-- Extension folder structure for Firefox
-- Firefox extension manifest (manifest.json)
-- Placeholder icons (icon48.png, icon128.png)
-- Vite build configured to output to public directory for extension compatibility
-- Messaging enabled between React popup and background script (testable via popup button)
-- Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection
-- Accessibility improvements (ARIA labels, input associations, contrast)
-- Responsive design for mobile and small screens
-- Subtle animations and micro-interactions for input focus and cost updates
-- Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
-- Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
-- Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
-- Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
-- Export/share results: users can export meeting cost data as CSV or PDF from the popup UI
-  Export/share results: users can export meeting cost data as CSV or PDF from the popup UI. PDF export now uses jsPDF for professional formatting and branding.
-  Share meeting cost directly to Slack channels using a secure relay endpoint (supports Vercel, Railway, or local ngrok relay)
-  Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
-  Supports local development with ngrok for relay testing
-  Enhanced error handling and feedback: extension UI provides specific, actionable error messages and color-coded notifications for Slack sharing issues
+Extension folder structure for Firefox
+Firefox extension manifest (manifest.json)
+Placeholder icons (icon48.png, icon128.png)
+Vite build configured to output to public directory for extension compatibility
+Messaging enabled between React popup and background script (testable via popup button)
+Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection
+Accessibility improvements (ARIA labels, input associations, contrast)
+Responsive design for mobile and small screens
+Subtle animations and micro-interactions for input focus and cost updates
+Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
+Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
+Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
+Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
+Export/share results: users can export meeting cost data as CSV (with header row, detailed data, and timestamp) or PDF from the popup UI. PDF export uses jsPDF for professional formatting and branding.
+Share meeting cost directly to Slack channels using a secure relay endpoint (supports Vercel, Railway, or local ngrok relay)
+Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
+Share meeting cost directly via email (CSV download and mailto integration)
+Supports local development with ngrok for relay testing
+Enhanced error handling and feedback: extension UI provides specific, actionable error messages and color-coded notifications for Slack sharing issues
 
 ## Getting Started
 
