@@ -96,10 +96,41 @@ function App() {
         if (data.ok) {
           setSlackStatus("Shared to Slack!");
         } else {
-          setSlackStatus("Error: " + (data.error || "Unknown error"));
+          let errorMsg = "";
+          switch (data.error) {
+            case "invalid_auth":
+              errorMsg =
+                "Invalid Slack authentication. Please reconnect your account.";
+              break;
+            case "token_revoked":
+              errorMsg =
+                "Your Slack token was revoked. Please re-authorize the extension.";
+              break;
+            case "channel_not_found":
+              errorMsg =
+                "Channel not found. Please check the channel name (e.g., #general).";
+              break;
+            case "not_in_channel":
+              errorMsg =
+                "Bot is not a member of the channel. Invite the bot to the channel and try again.";
+              break;
+            case "missing_required_fields":
+              errorMsg =
+                "Missing required fields. Please check your Slack token and channel.";
+              break;
+            default:
+              errorMsg = data.error
+                ? `Slack error: ${data.error}`
+                : "Unknown error occurred.";
+          }
+          setSlackStatus(`Error: ${errorMsg}`);
         }
       })
-      .catch(() => setSlackStatus("Error: Network or permission issue"));
+      .catch((err) => {
+        setSlackStatus(
+          "Error: Network or permission issue. Please check your connection and try again."
+        );
+      });
   }
 
   const costPerMinute = salary / 2080 / 60;
