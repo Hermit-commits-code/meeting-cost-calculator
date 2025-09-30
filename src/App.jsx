@@ -489,18 +489,27 @@ function App() {
             <button
               type="button"
               onClick={() => {
-                const doc = `Meeting Cost Report\n\nAttendees: ${attendees}\nAvg. Salary: ${currency}${salary}\nDuration: ${duration} min\nMeeting Type: ${
-                  meetingType || "Custom"
-                }\nSalary Preset: ${
-                  salaryPreset || "Custom"
-                }\nEstimated Cost: ${currency}${totalCost.toFixed(2)}`;
-                const blob = new Blob([doc], { type: "application/pdf" });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = "meeting-cost.pdf";
-                a.click();
-                URL.revokeObjectURL(url);
+                import("jspdf").then(({ jsPDF }) => {
+                  const doc = new jsPDF();
+                  doc.setFontSize(18);
+                  doc.text("Meeting Cost Report", 20, 20);
+                  doc.setFontSize(12);
+                  doc.text(`Attendees: ${attendees}`, 20, 35);
+                  doc.text(`Avg. Salary: ${currency}${salary}`, 20, 45);
+                  doc.text(`Duration: ${duration} min`, 20, 55);
+                  doc.text(`Meeting Type: ${meetingType || "Custom"}`, 20, 65);
+                  doc.text(
+                    `Salary Preset: ${salaryPreset || "Custom"}`,
+                    20,
+                    75
+                  );
+                  doc.text(
+                    `Estimated Cost: ${currency}${totalCost.toFixed(2)}`,
+                    20,
+                    85
+                  );
+                  doc.save("meeting-cost.pdf");
+                });
               }}
               style={{
                 padding: "8px 12px",

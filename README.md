@@ -18,16 +18,22 @@ This project is a professional Firefox browser extension built with React and Vi
 - Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
 - Save teams/templates: users can save current meeting settings as named templates and load them instantly from a dropdown
 - Export/share results: users can export meeting cost data as CSV or PDF from the popup UI
-  Export/share results: users can export meeting cost data as CSV or PDF from the popup UI. (MVP complete; advanced PDF export planned in future mini-roadmap)
-  Share meeting cost directly to Slack channels using a secure production relay endpoint
+  Export/share results: users can export meeting cost data as CSV or PDF from the popup UI. PDF export now uses jsPDF for professional formatting and branding.
+  Share meeting cost directly to Slack channels using a secure relay endpoint (supports Vercel, Railway, or local ngrok relay)
   Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
+  Supports local development with ngrok for relay testing
   Enhanced error handling and feedback: extension UI provides specific, actionable error messages and color-coded notifications for Slack sharing issues
 
 ## Getting Started
 
 1. Run `npm install` to install dependencies.
 2. Run `npm run build` to build the extension files into the `public` directory.
-3. Load the extension in Firefox via `about:debugging` > "This Firefox" > "Load Temporary Add-on" and select `manifest.json` from the `public` folder.
+3. Set up your relay endpoint:
+
+- For production, deploy to Vercel or Railway and set your Slack app redirect URI accordingly.
+- For local development, run your relay server and expose it with ngrok. Use the ngrok HTTPS URL as your redirect URI in Slack and your extension.
+
+4. Load the extension in Firefox via `about:debugging` > "This Firefox" > "Load Temporary Add-on" and select `manifest.json` from the `public` folder.
 
 ## Roadmap
 
