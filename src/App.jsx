@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import ExportShareSection from "./components/ExportShareSection.jsx";
+import MeetingHistorySection from "./components/MeetingHistorySection.jsx";
+import TemplatesSection from "./components/TemplatesSection.jsx";
+import SettingsSection from "./components/SettingsSection.jsx";
+import MainFormSection from "./components/MainFormSection.jsx";
 import SlackIntegrationSection from "./components/SlackIntegrationSection.jsx";
 import "./App.css";
 import Toast from "./components/Toast.jsx";
@@ -16,6 +20,91 @@ import { savePref, getPref } from "./utils/storage.js";
 // ...define your state, handlers, and logic here...
 
 function App() {
+  // Reporting helpers
+  function getAggregatedReport(period = "month") {
+    const now = new Date();
+    let filtered = [];
+    if (period === "week") {
+      const weekAgo = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() - 7
+      );
+      filtered = meetingHistory.filter((m) => new Date(m.date) >= weekAgo);
+    } else {
+      const monthAgo = new Date(
+        now.getFullYear(),
+        now.getMonth() - 1,
+        now.getDate()
+      );
+      filtered = meetingHistory.filter((m) => new Date(m.date) >= monthAgo);
+    }
+    const totalCost = filtered.reduce((sum, m) => sum + m.totalCost, 0);
+    const totalMeetings = filtered.length;
+    const totalAttendees = filtered.reduce((sum, m) => sum + m.attendees, 0);
+    return { totalCost, totalMeetings, totalAttendees, filtered };
+  }
+
+  function exportReportCSV(period = "month") {
+    const { filtered } = getAggregatedReport(period);
+    const header = ["Date", "Type", "Attendees", "Duration", "Salary", "Cost"];
+    const rows = filtered.map((m) => [
+      m.date,
+      m.meetingType || "Custom",
+      m.attendees,
+      m.duration,
+      `${m.currency}${m.salary}`,
+      `${m.currency}${m.totalCost.toFixed(2)}`,
+    ]);
+    const csv =
+      header.join(",") + "\n" + rows.map((r) => r.join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `meeting-report-${period}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  // Meeting history state
+  const [meetingHistory, setMeetingHistory] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("meetingHistory")) || [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Persist meeting history
+  React.useEffect(() => {
+    localStorage.setItem("meetingHistory", JSON.stringify(meetingHistory));
+  }, [meetingHistory]);
+
+  // Save current meeting to history
+  function handleSaveMeeting() {
+    const newMeeting = {
+      date: new Date().toLocaleString(),
+      attendees,
+      salary,
+      duration,
+      currency,
+      meetingType,
+      salaryPreset,
+      totalCost,
+    };
+    setMeetingHistory([newMeeting, ...meetingHistory]);
+    setToastMsg("✅ Meeting saved to history!");
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  }
+
+  // Clear meeting history
+  function handleClearHistory() {
+    setMeetingHistory([]);
+    setToastMsg("🗑️ Meeting history cleared.");
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 2000);
+  }
   // State declarations (move to top)
   const [theme, setTheme] = useState(() => getPref("theme") || "light");
   const [attendees, setAttendees] = useState(
@@ -350,324 +439,39 @@ function App() {
           {theme === "dark" ? "☀️" : "🌙"}
         </button>
       </div>
-      {/* Settings Section */}
-      <details style={{ marginBottom: 16 }}>
-        <summary style={{ fontWeight: 500, fontSize: 16, cursor: "pointer" }}>
-          Customization Settings
-        </summary>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            marginTop: 10,
-          }}
-        >
-          <label htmlFor="salary-preset-select">Salary Preset</label>
-          <select
-            id="salary-preset-select"
-            value={salaryPreset}
-            onChange={(e) => setSalaryPreset(e.target.value)}
-            style={{
-              padding: 8,
-              borderRadius: 6,
-              border: "1px solid #bbb",
-              fontSize: 16,
-            }}
-            aria-label="Salary preset selection"
-          >
-            <option value="">Custom</option>
-            <option value="Engineer">Engineer ($80,000)</option>
-            <option value="Manager">Manager ($120,000)</option>
-            <option value="Executive">Executive ($200,000)</option>
-          </select>
-          <label htmlFor="meeting-type-select">Meeting Type</label>
-          <select
-            id="meeting-type-select"
-            value={meetingType}
-            onChange={(e) => setMeetingType(e.target.value)}
-            style={{
-              padding: 8,
-              borderRadius: 6,
-              border: "1px solid #bbb",
-              fontSize: 16,
-            }}
-            aria-label="Meeting type selection"
-          >
-            <option value="">Custom</option>
-            <option value="Standup">Standup (15 min)</option>
-            <option value="Planning">Planning (60 min)</option>
-            <option value="Review">Review (30 min)</option>
-            <option value="Workshop">Workshop (120 min)</option>
-          </select>
-
-          {/* Meeting Presets Quick-Select */}
-          <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
-            <button
-              type="button"
-              onClick={() => {
-                setMeetingType("Standup");
-                setDuration(15);
-              }}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 6,
-                border: "none",
-                background: "#e5e1ea",
-                color: "#4a154b",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 15,
-              }}
-              aria-label="Preset Standup"
-            >
-              Standup (15m)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMeetingType("Planning");
-                setDuration(60);
-              }}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 6,
-                border: "none",
-                background: "#e5e1ea",
-                color: "#4a154b",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 15,
-              }}
-              aria-label="Preset Planning"
-            >
-              Planning (60m)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMeetingType("Review");
-                setDuration(30);
-              }}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 6,
-                border: "none",
-                background: "#e5e1ea",
-                color: "#4a154b",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 15,
-              }}
-              aria-label="Preset Review"
-            >
-              Review (30m)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMeetingType("Workshop");
-                setDuration(120);
-              }}
-              style={{
-                padding: "6px 10px",
-                borderRadius: 6,
-                border: "none",
-                background: "#e5e1ea",
-                color: "#4a154b",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: 15,
-              }}
-              aria-label="Preset Workshop"
-            >
-              Workshop (120m)
-            </button>
-          </div>
-        </div>
-      </details>
-      {/* Teams/Templates Section */}
-      <details style={{ marginBottom: 16 }}>
-        <summary style={{ fontWeight: 500, fontSize: 16, cursor: "pointer" }}>
-          Teams & Templates
-        </summary>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 10,
-            marginTop: 10,
-          }}
-        >
-          <label htmlFor="template-name-input">Template Name</label>
-          <input
-            id="template-name-input"
-            type="text"
-            value={templateName}
-            onChange={(e) => setTemplateName(e.target.value)}
-            placeholder="e.g. Design Team, Sprint Planning"
-            style={{
-              padding: 8,
-              borderRadius: 6,
-              border: "1px solid #bbb",
-              fontSize: 16,
-            }}
-            aria-label="Template name input"
-          />
-          <button
-            type="button"
-            onClick={handleSaveTemplate}
-            style={{
-              padding: "8px 12px",
-              borderRadius: 6,
-              border: "none",
-              background: "#2a7d46",
-              color: "#fff",
-              fontWeight: 500,
-              cursor: "pointer",
-              fontSize: 16,
-            }}
-            aria-label="Save template"
-          >
-            Save Template
-          </button>
-          {templates.length > 0 && (
-            <>
-              <label htmlFor="template-select">Load Template</label>
-              <select
-                id="template-select"
-                value={selectedTemplate}
-                onChange={(e) => handleLoadTemplate(e.target.value)}
-                style={{
-                  padding: 8,
-                  borderRadius: 6,
-                  border: "1px solid #bbb",
-                  fontSize: 16,
-                }}
-                aria-label="Template selection"
-              >
-                <option value="">Select a template...</option>
-                {templates.map((t) => (
-                  <option key={t.name} value={t.name}>
-                    {t.name}
-                  </option>
-                ))}
-              </select>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: 4,
-                  marginTop: 8,
-                }}
-              >
-                {templates.map((t) => (
-                  <button
-                    key={t.name}
-                    type="button"
-                    onClick={() => handleDeleteTemplate(t.name)}
-                    style={{
-                      padding: "4px 8px",
-                      borderRadius: 4,
-                      border: "none",
-                      background: "#d6336c",
-                      color: "#fff",
-                      fontWeight: 500,
-                      cursor: "pointer",
-                      fontSize: 14,
-                    }}
-                    aria-label={`Delete template ${t.name}`}
-                  >
-                    Delete {t.name}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </details>
-      {/* Main Form Section */}
-      <form
-        style={{ display: "flex", flexDirection: "column", gap: 12 }}
-        aria-labelledby="meeting-cost-title"
-      >
-        <label htmlFor="attendees-input">Attendees</label>
-        <input
-          id="attendees-input"
-          type="number"
-          min={1}
-          value={attendees}
-          onChange={(e) => setAttendees(Number(e.target.value))}
-          className="input-animated"
-          style={{
-            width: "100%",
-            padding: 8,
-            borderRadius: 6,
-            border: "1px solid #bbb",
-            marginTop: 4,
-            fontSize: 16,
-          }}
-          aria-label="Number of attendees"
-        />
-        <label htmlFor="salary-input">Avg. Salary (annual)</label>
-        <input
-          id="salary-input"
-          type="number"
-          min={10000}
-          value={salary}
-          onChange={(e) => setSalary(Number(e.target.value))}
-          className="input-animated"
-          style={{
-            width: "100%",
-            padding: 8,
-            borderRadius: 6,
-            border: "1px solid #bbb",
-            marginTop: 4,
-            fontSize: 16,
-          }}
-          aria-label="Average annual salary"
-        />
-        <label htmlFor="duration-input">Duration (minutes)</label>
-        <input
-          id="duration-input"
-          type="number"
-          min={1}
-          value={duration}
-          onChange={(e) => setDuration(Number(e.target.value))}
-          className="input-animated"
-          style={{
-            width: "100%",
-            padding: 8,
-            borderRadius: 6,
-            border: "1px solid #bbb",
-            marginTop: 4,
-            fontSize: 16,
-          }}
-          aria-label="Meeting duration in minutes"
-        />
-        <label htmlFor="currency-select">Currency</label>
-        <select
-          id="currency-select"
-          value={currency}
-          onChange={(e) => setCurrency(e.target.value)}
-          className="input-animated"
-          style={{
-            width: "100%",
-            padding: 8,
-            borderRadius: 6,
-            border: "1px solid #bbb",
-            marginTop: 4,
-            fontSize: 16,
-          }}
-          aria-label="Currency selection"
-        >
-          <option value="$">$</option>
-          <option value="€">€</option>
-          <option value="£">£</option>
-          <option value="₹">₹</option>
-        </select>
-      </form>
+      <SettingsSection
+        salaryPreset={salaryPreset}
+        setSalaryPreset={setSalaryPreset}
+        meetingType={meetingType}
+        setMeetingType={setMeetingType}
+        setDuration={setDuration}
+      />
+      <TemplatesSection
+        templates={templates}
+        templateName={templateName}
+        setTemplateName={setTemplateName}
+        handleSaveTemplate={handleSaveTemplate}
+        handleLoadTemplate={handleLoadTemplate}
+        handleDeleteTemplate={handleDeleteTemplate}
+        selectedTemplate={selectedTemplate}
+      />
+      <MainFormSection
+        attendees={attendees}
+        setAttendees={setAttendees}
+        salary={salary}
+        setSalary={setSalary}
+        duration={duration}
+        setDuration={setDuration}
+        currency={currency}
+        setCurrency={setCurrency}
+      />
       <div style={{ margin: "24px 0 0", textAlign: "center" }}>
+        <MeetingHistorySection
+          meetingHistory={meetingHistory}
+          handleClearHistory={handleClearHistory}
+          getAggregatedReport={getAggregatedReport}
+          exportReportCSV={exportReportCSV}
+        />
         <span style={{ fontSize: 16, color: "#888" }}>
           Estimated Meeting Cost
         </span>
@@ -684,8 +488,27 @@ function App() {
           {currency}
           {totalCost.toFixed(2)}
         </div>
+        <button
+          type="button"
+          onClick={handleSaveMeeting}
+          style={{
+            marginTop: 12,
+            padding: "8px 16px",
+            borderRadius: 8,
+            border: "none",
+            background: "#0072c6",
+            color: "#fff",
+            fontWeight: 600,
+            cursor: "pointer",
+            fontSize: 16,
+            boxShadow: "0 1px 4px rgba(74,21,75,0.08)",
+            transition: "background 0.2s",
+          }}
+          aria-label="Save meeting to history"
+        >
+          Save Meeting to History
+        </button>
         <div>
-          {/* Export/Share Section */}
           <ExportShareSection
             attendees={attendees}
             salary={salary}
@@ -695,7 +518,6 @@ function App() {
             salaryPreset={salaryPreset}
             totalCost={totalCost}
           />
-          {/* Professional Slack Integration Section (modularized) */}
           <SlackIntegrationSection
             slackAccessToken={slackAccessToken}
             slackChannel={slackChannel}

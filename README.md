@@ -2,29 +2,31 @@
 
 This project is a professional Firefox browser extension built with React and Vite. It calculates the cost of meetings in real time and is designed for superior UX/UI, privacy, and Slack integration via a secure production relay endpoint.
 
+
 ## Features
 
-Extension folder structure for Firefox
-Firefox extension manifest (manifest.json)
-Placeholder icons (icon48.png, icon128.png)
-Vite build configured to output to public directory for extension compatibility
-Messaging enabled between React popup and background script (testable via popup button)
-Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection
-Accessibility improvements (ARIA labels, input associations, contrast)
-Responsive design for mobile and small screens
-Subtle animations and micro-interactions for input focus and cost updates
-Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
-Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
-Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
-Team templates: save/load meeting settings as named templates
-Meeting presets: quick-select for common meeting types/durations
-Persistent preferences: all settings saved to localStorage
-Export/share results: users can export meeting cost data as CSV (with header row, detailed data, and timestamp) or PDF from the popup UI. PDF export uses jsPDF for professional formatting and branding.
-Share meeting cost directly to Slack channels using a secure relay endpoint (supports Vercel, Railway, or local ngrok relay)
-Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
-Share meeting cost directly via email (CSV download and mailto integration)
-Supports local development with ngrok for relay testing
-Enhanced error handling and feedback: extension UI provides specific, actionable error messages and color-coded notifications for Slack sharing issues
+- Modularized React component architecture: All major features (settings, templates, main form, meeting history/reporting, export/share, Slack integration) are implemented as reusable components in `src/components/`.
+- Extension folder structure for Firefox
+- Firefox extension manifest (manifest.json)
+- Placeholder icons (icon48.png, icon128.png)
+- Vite build configured to output to public directory for extension compatibility
+- Messaging enabled between React popup and background script (testable via popup button)
+- Minimalistic, sleek meeting cost calculator popup UI with real-time calculation and currency selection
+- Accessibility improvements (ARIA labels, input associations, contrast)
+- Responsive design for mobile and small screens
+- Subtle animations and micro-interactions for input focus and cost updates
+- Popup UI fully tested in Firefox extension context; all features verified (inputs, calculation, accessibility, responsiveness, animations)
+- Dark/light mode toggle for popup UI; theme adapts inputs, text, and cost display
+- Customization options: salary range presets, meeting type presets, currency selection, and persistent user preferences
+- Team templates: save/load meeting settings as named templates
+- Meeting presets: quick-select for common meeting types/durations
+- Persistent preferences: all settings saved to localStorage
+- Export/share results: users can export meeting cost data as CSV (with header row, detailed data, and timestamp) or PDF from the popup UI. PDF export uses jsPDF for professional formatting and branding.
+- Share meeting cost directly to Slack channels using a secure relay endpoint (supports Vercel, Railway, or local ngrok relay)
+- Automated Slack OAuth flow: users can connect their Slack account, authorize the extension, and have tokens managed automatically for secure sharing
+- Share meeting cost directly via email (CSV download and mailto integration)
+- Supports local development with ngrok for relay testing
+- Enhanced error handling and feedback: extension UI provides specific, actionable error messages and color-coded notifications for Slack sharing issues
 
 ## Getting Started
 
