@@ -38,9 +38,12 @@ This project is a professional Firefox browser extension built with React and Vi
 
 4. Load the extension in Firefox via `about:debugging` > "This Firefox" > "Load Temporary Add-on" and select `manifest.json` from the `public` folder.
 
-## Roadmap
 
+## Roadmap
 See `docs/roadmap.md` for detailed development steps and mini-roadmaps.
+
+## Release Notes
+See `docs/RELEASE_NOTES_v1.4.1.md` for the latest patch update and all previous release notes in the `docs/` folder.
 
 ## License
 
