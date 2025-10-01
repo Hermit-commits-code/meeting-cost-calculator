@@ -1,0 +1,12 @@
+dist
+docs
+eslint.config.js
+index.html
+node_modules
+package.json
+package-lock.json
+public
+README.md
+RELEASE_NOTES_V1.1.1.md
+src
+vite.config.js

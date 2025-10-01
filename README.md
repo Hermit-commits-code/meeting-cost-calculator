@@ -2,7 +2,6 @@
 
 This project is a professional Firefox browser extension built with React and Vite. It calculates the cost of meetings in real time and is designed for superior UX/UI, privacy, and Slack integration via a secure production relay endpoint.
 
-
 ## Features
 
 - Modularized React component architecture: All major features (settings, templates, main form, meeting history/reporting, export/share, Slack integration) are implemented as reusable components in `src/components/`.
@@ -41,7 +40,7 @@ This project is a professional Firefox browser extension built with React and Vi
 
 ## Roadmap
 
-See `roadmap.md` for detailed development steps and mini-roadmaps.
+See `docs/roadmap.md` for detailed development steps and mini-roadmaps.
 
 ## License
 

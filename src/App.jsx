@@ -14,7 +14,7 @@ import {
   requestSlackOAuthCode,
   exchangeSlackToken,
   postToSlack as slackPostToSlack,
-} from "./slackService.js";
+} from "./services/slackService.js";
 import { savePref, getPref } from "./utils/storage.js";
 
 // ...define your state, handlers, and logic here...

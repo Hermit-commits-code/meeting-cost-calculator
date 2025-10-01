@@ -4,7 +4,7 @@ import {
   requestSlackOAuthCode,
   exchangeSlackToken,
   postToSlack as slackPostToSlack,
-} from "../slackService";
+} from "../services/slackService";
 
 export function useSlack() {
   const [slackAccessToken, setSlackAccessToken] = useState("");
